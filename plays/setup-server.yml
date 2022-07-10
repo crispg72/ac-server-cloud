@@ -14,3 +14,15 @@
       become: true
       become_user: root
       shell: apt update -y
+
+    - name: Create acserver group
+      group:
+        name: acserver
+        state: present
+
+    - name: Create a login user
+      user:
+        name: acserver
+        groups: acserver 
+        state: present
+        system: yes
