@@ -6,8 +6,8 @@
   gather_facts: False
   user: root
   vars:
-    hcloud_token: "{{ lookup('env','HCLOUD_TOKEN') }}"
-    ssh_key: "{{ lookup('env','SSH_KEY') }}"
+    hcloud_token: "{{lookup('ansible.builtin.file', lookup('env','API_KEY_FILE') )}}"
+    ssh_key: "{{lookup('env','SSH_KEY')}}"
   tasks:
     - name: Create a basic server
       hcloud_server:
