@@ -1,0 +1,14 @@
+---
+- name: ping the host
+  hosts: servers
+  remote_user: root
+  gather_facts: False
+
+  tasks:
+    - name: Check we can access the host
+      ping:
+
+    - name: Run apt update
+      become: true
+      become_user: root
+      shell: apt update -y
