@@ -1,0 +1,18 @@
+
+---
+- name: Delete Server
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  user: root
+  vars:
+    hcloud_token: "{{ lookup('env','HCLOUD_TOKEN') }}"
+  tasks:
+    - name: Remove the server
+      hcloud_server:
+          api_token: "{{ hcloud_token }}"
+          name: ac-server
+          server_type: cx11
+          image: ubuntu-20.04
+          state: absent
+      register: server
