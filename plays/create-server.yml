@@ -19,8 +19,10 @@
             - "{{ ssh_key }}"
           state: present
       register: server
-    - name: Store server IP in inventory file
+    - name: Store server details in inventory file
       local_action:
         module: copy
-        content: "{{ server.ipv4_address }}"
+        content: "{{ server }}"
         dest: ./inventory
+    - name: Create ansible compatible inventory
+      local_action: command python ../files/create-inventory.py
