@@ -1,0 +1,21 @@
+
+---
+- name: Create Basic Server
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  user: root
+  vars:
+    hcloud_token: "{{ lookup('env','HCLOUD_TOKEN') }}"
+    ssh_key: "{{ lookup('env','SSH_KEY') }}"
+  tasks:
+    - name: Create a basic server
+      hcloud_server:
+          api_token: "{{ hcloud_token }}"
+          name: ac-server
+          server_type: cx21
+          image: ubuntu-20.04
+          ssh_keys:
+            - "{{ ssh_key }}"
+          state: present
+      register: server
