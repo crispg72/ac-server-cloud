@@ -26,3 +26,18 @@
         groups: acserver 
         state: present
         system: yes
+
+    - name: Download linuxgsm.sh
+      become_user: acserver
+      become: true
+      ansible.builtin.get_url:
+        url: https://linuxgsm.sh
+        dest: /home/acserver/linuxgsm.sh
+        mode: '0740'
+
+    - name: Run linuxgsm.sh to install server
+      become_user: acserver
+      become: true
+      ansible.builtin.shell:
+        cmd: ./linuxgsm.sh acserver
+        chdir: /home/acserver
