@@ -41,3 +41,10 @@
       ansible.builtin.shell:
         cmd: ./linuxgsm.sh acserver
         chdir: /home/acserver
+
+    - name: run server install
+      become_user: acserver
+      become: true
+      ansible.builtin.shell:
+        cmd: ./acserver ai
+        chdir: /home/acserver
