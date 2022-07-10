@@ -13,7 +13,7 @@
       hcloud_server:
           api_token: "{{ hcloud_token }}"
           name: ac-server
-          server_type: cx21
+          server_type: cx11
           image: ubuntu-20.04
           ssh_keys:
             - "{{ ssh_key }}"
