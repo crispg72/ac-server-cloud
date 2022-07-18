@@ -1,0 +1,59 @@
+---
+- name: ping the host
+  hosts: servers
+  remote_user: root
+  gather_facts: False
+
+  vars:
+    ansible_ssh_private_key_file: "{{ lookup('env','SSH_KEY_FILE') }}"
+  tasks:
+    - name: Check we can access the host
+      ping:
+
+    - name: Run apt update
+      become: true
+      become_user: root
+      shell: apt update -y
+
+    - name: Create acserver group
+      group:
+        name: acserver
+        state: present
+
+    - name: Create a login user
+      user:
+        name: acserver
+        groups: acserver 
+        state: present
+        system: yes
+
+    - name: Install dependencies
+      become: true
+      become_user: root
+      shell: apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+    - name: Add docker repo key
+      become: true
+      become_user: root
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+    - name: Add docker repo
+      become: true
+      become_user: root
+      shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+
+    - name: Install docker
+      become: true
+      become_user: root
+      shell: apt install -y docker-ce
+
+    - name: Check docker service
+      become: true
+      become_user: root
+      shell: systemctl status docker
+
+    - name: Allow SSH in UFW
+      ufw: rule=allow port=22 proto=tcp
+
+    - name: Set firewall default policy
+      ufw: state=enabled policy=reject
