@@ -6,6 +6,7 @@
   gather_facts: False
   user: root
   vars:
+    ansible_python_interpreter: python3
     hcloud_token: "{{lookup('ansible.builtin.file', lookup('env','API_KEY_FILE') )}}"
   tasks:
     - name: Remove the server
