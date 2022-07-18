@@ -20,6 +20,10 @@
             - "{{ ssh_key }}"
           state: present
       register: server
+    - name: Write the new instance host key to known hosts
+      connection: local
+      shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
+
     - name: Store server details in inventory file
       local_action:
         module: copy
