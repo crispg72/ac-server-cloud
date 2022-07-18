@@ -1,0 +1,22 @@
+---
+- name: Create docker registry secrets
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+    - name: Generate private key
+      openssl_privatekey:
+        path: ../secrets/registry.key
+        size: 2048 
+
+    - name: Generate csr
+      openssl_csr:
+        path: ../secrets/registry.csr
+        privatekey_path: ../secrets/registry.key
+
+    - name: Generate cert
+      openssl_certificate:
+        provider: selfsigned
+        path: ../secrets/registry.crt
+        privatekey_path: ../secrets/registry.key
+        csr_path: ../secrets/registry.csr
