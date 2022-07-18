@@ -57,3 +57,19 @@
 
     - name: Set firewall default policy
       ufw: state=enabled policy=reject
+
+    - name: Creates directory
+      file:
+        path: /etc/docker/certs.d/{{ inventory_hostname }}:5000
+        state: directory
+
+    - name: Copy registry cert&key 
+      copy:
+        src: '{{item}}'
+        dest: /etc/docker/certs.d/{{ inventory_hostname }}:5000
+        owner: root
+        group: root
+        mode: 0644
+      loop:
+        - ../secrets/registry.crt
+        - ../secrets/registry.key
