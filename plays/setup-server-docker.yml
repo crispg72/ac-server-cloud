@@ -73,3 +73,11 @@
       loop:
         - ../secrets/registry.crt
         - ../secrets/registry.key
+
+    - name: Copy registry start script
+      ansible.builtin.template:
+       src: ../files/start_registry.sh
+       dest: /usr/bin/start_registry.sh
+       owner: root
+       group: root
+       mode: '0744'
