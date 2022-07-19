@@ -5,6 +5,7 @@
   gather_facts: False
 
   vars:
+    ac_server_file: "{{ lookup('env','AC_SERVER_IMAGE_FILE') }}"
     ansible_ssh_private_key_file: "{{ lookup('env','SSH_KEY_FILE') }}"
     command_public_ip: "{{ lookup('env','PUBLIC_IP') }}"
   tasks:
@@ -83,10 +84,15 @@
        group: root
        mode: '0744'
 
-    - name: Start remote registry
+    - name: Copy server image
+      copy:
+        src: ../files/{{ ac_server_file }}
+        dest: /usr/bin/{{ ac_server_file }}
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Load server image into docker
       become: true
       become_user: root
-      shell: /usr/bin/start_registry.sh
-
-    - name: allow connections from command node to registry port
-      ufw: rule=allow port=5000 proto=tcp src={{ command_public_ip }}
+      shell: docker load --input /usr/bin/{{ ac_server_file }}
