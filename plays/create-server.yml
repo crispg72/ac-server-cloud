@@ -20,14 +20,20 @@
             - "{{ ssh_key }}"
           state: present
       register: server
+
+    - name: Just in case we have an entry for this server
+      connection: local
+      shell: "ssh-keygen -R {{ server.hcloud_server.ipv4_address }}"
+
     - name: Write the new instance host key to known hosts
       connection: local
-      shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"
+      shell: "ssh-keyscan -H {{ server.hcloud_server.ipv4_address }} >> ~/.ssh/known_hosts"
 
     - name: Store server details in inventory file
       local_action:
         module: copy
         content: "{{ server }}"
         dest: ./inventory
+
     - name: Create ansible compatible inventory
       local_action: command python ../files/create-inventory.py
